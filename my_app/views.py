@@ -42,7 +42,7 @@ from django.utils.timezone import now, timedelta
 import time
 # Initialize Firebase only if not already initialized
 if not firebase_admin._apps:
-    cred = credentials.Certificate("firebase/apna-college-2b778-d0a7ea9d531a.json")
+    cred = credentials.Certificate("")
     firebase_admin.initialize_app(cred)
 
 # Create your views here.
