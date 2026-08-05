@@ -1,0 +1,249 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeSync - Smarter Trading</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'dashboard1.css' %}">
+
+    <!-- FontAwesome for Icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</head>
+
+<body class=class="bg-gray-100 opacity-1 transition-opacity duration-700">
+
+    <!-- Preloader (Logo Animation) -->
+    <div id="preloader" class="fixed inset-0 flex items-center justify-center bg-gray-900 z-50">
+        <div class="logo-container">
+            <img src="{% static 'images/logo.jpg' %}" id="logo">
+        </div>
+    </div>
+
+    
+    <!-- Navbar (Initially Hidden) -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full bg-gray-900 bg-opacity-80 text-white py-4 shadow-lg transition-all duration-300 z-50 opacity-0">
+        <div class="container mx-auto flex justify-between items-center px-6">
+            <!-- Logo and Name -->
+            <a href="#" class="flex items-center space-x-3">
+                <img src="{% static 'images/logo.jpg' %}" alt="TradeSync Logo" class="h-10 w-10 rounded-full">
+                <span class="text-2xl font-bold">TradeSync</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Slideshow -->
+    <header id="hero-section" class="relative h-screen flex items-center justify-center text-center text-white bg-cover bg-center transition-all duration-1000 pt-16">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="relative z-10 p-8 rounded-lg shadow-lg backdrop-blur-md">
+            <h1 id="hero-title" class="text-5xl font-extrabold transition-all duration-1000">Invest Smarter with TradeSync</h1>
+            <p id="hero-subtext" class="mt-4 text-lg transition-all duration-1000">Get real-time stock insights & AI-driven predictions</p>
+
+            <!-- Call to Action Button -->
+            <a href="{% url 'login' %}" class="mt-4 inline-block bg-yellow-500 hover:bg-yellow-600 px-6 py-3 rounded-lg text-gray-900 font-bold transition duration-300">
+                Get Started
+            </a>
+            
+        </div>
+    </header>
+
+<!-- Services Section with Flip Cards -->
+<section class="container mx-auto py-16 px-6 text-center">
+    <h2 class="text-3xl font-bold text-gray-900">Why Choose TradeSync?</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mt-8">
+
+        <!-- Live Stock Prices -->
+        <div class="flip-card">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <i class="fas fa-chart-line text-blue-500 text-4xl"></i>
+                    <h4 class="mt-4 text-xl font-semibold">Live Stock Prices</h4>
+                </div>
+                <div class="flip-card-back">
+                    <p>Get real-time stock market updates and track price movements instantly.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Portfolio Management -->
+        <div class="flip-card">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <i class="fas fa-briefcase text-green-500 text-4xl"></i>
+                    <h4 class="mt-4 text-xl font-semibold">Portfolio Management</h4>
+                </div>
+                <div class="flip-card-back">
+                    <p>Monitor your investments, analyze profits, and manage your stock holdings efficiently.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Market News -->
+        <div class="flip-card">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <i class="fas fa-newspaper text-yellow-500 text-4xl"></i>
+                    <h4 class="mt-4 text-xl font-semibold">Market News</h4>
+                </div>
+                <div class="flip-card-back">
+                    <p>Stay updated with the latest financial news and stock market insights.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trading Bot -->
+        <div class="flip-card">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <i class="fas fa-robot text-purple-500 text-4xl"></i>
+                    <h4 class="mt-4 text-xl font-semibold">Trading Bot</h4>
+                </div>
+                <div class="flip-card-back">
+                    <p>Use AI-powered automation to make trading decisions and optimize your investments.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stock Prediction -->
+        <div class="flip-card">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <i class="fas fa-bullseye text-red-500 text-4xl"></i>
+                    <h4 class="mt-4 text-xl font-semibold">Stock Prediction</h4>
+                </div>
+                <div class="flip-card-back">
+                    <p>Leverage AI to predict stock trends and make informed investment decisions.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="bg-gray-900 text-white py-16 px-6">
+    <div class="max-w-6xl mx-auto">
+        <h2 class="text-4xl font-bold mb-6 text-yellow-400 text-center">About Us</h2>
+        <p class="text-lg text-gray-300 mb-12 text-center">
+            We are a team of passionate data scientists and developers dedicated to providing smart stock analysis and investment solutions.
+        </p>
+
+        <div class="about-container flex flex-wrap md:flex-nowrap items-center gap-12">
+            <!-- Left: Large Image -->
+            <div class="w-full md:w-1/2 flex justify-center">
+                <img src="{% static 'images/image5.jpg' %}" alt="Our Team" class="rounded-xl shadow-lg w-full max-w-[500px]">
+            </div>
+
+            <!-- Right: Text Content -->
+            <div class="w-full md:w-1/2">
+                <h3 class="text-3xl font-semibold mb-4 text-yellow-300">Who We Are</h3>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Our platform leverages AI and data-driven insights to help investors make informed decisions.
+                </p>
+
+                <div class="about-values grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="value-box bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition">
+                        <h4 class="text-xl font-semibold text-yellow-400">Our Mission</h4>
+                        <p class="text-gray-300 mt-2">Simplifying stock market analysis with AI-driven insights.</p>
+                    </div>
+
+                    <div class="value-box bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition">
+                        <h4 class="text-xl font-semibold text-yellow-400">Our Vision</h4>
+                        <p class="text-gray-300 mt-2">Becoming the leading AI-powered investment platform.</p>
+                    </div>
+
+                    <div class="value-box bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition">
+                        <h4 class="text-xl font-semibold text-yellow-400">Our Goal</h4>
+                        <p class="text-gray-300 mt-2">Continuously improving our algorithms for accurate insights.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const preloader = document.getElementById("preloader");
+            const logo = document.getElementById("logo");
+            const navbar = document.getElementById("navbar"); // Navbar Reference
+            const body = document.body;
+        
+            // Step 1: Show Logo
+            setTimeout(() => {
+                logo.style.opacity = "1";
+                logo.style.transform = "scale(1)";
+            }, 500);
+        
+            // Step 2: Hide Logo, Show Dashboard & Navbar
+            setTimeout(() => {
+                preloader.style.opacity = "0";
+                body.style.overflow = "auto"; // Allow scrolling after animation
+        
+                setTimeout(() => {
+                    preloader.style.display = "none";
+                    navbar.classList.remove("opacity-0"); // Show Navbar after animation
+                    navbar.classList.add("opacity-100", "transition-opacity", "duration-700");
+                }, 700);
+            }, 2000);
+        });
+        </script>
+        
+
+    <script>
+        window.addEventListener("scroll", function () {
+            const navbar = document.getElementById("navbar");
+    
+            if (window.scrollY > 50) {
+                navbar.classList.remove("bg-opacity-80");
+                navbar.classList.add("bg-opacity-100");
+            } else {
+                navbar.classList.remove("bg-opacity-100");
+                navbar.classList.add("bg-opacity-80");
+            }
+        });
+    </script>
+    <!-- JavaScript for Slideshow -->
+    <script>
+        
+        const images = [
+            "{% static 'images/image11.jpg' %}",
+            "{% static 'images/image10.jpg' %}",
+            "{% static 'images/image13.jpg' %}"
+        ];
+
+        const textColors = ["text-yellow-400", "text-blue-400", "text-red-400"];
+        const subTexts = [
+            "Invest Smarter with TradeSync",
+            "AI-driven stock insights at your fingertips",
+            "Maximize your returns with real-time data"
+        ];
+
+        let index = 0;
+
+        function changeSlide() {
+            const heroSection = document.getElementById("hero-section");
+            const heroTitle = document.getElementById("hero-title");
+            const heroSubtext = document.getElementById("hero-subtext");
+
+            heroSection.style.backgroundImage = `url(${images[index]})`;
+
+            heroTitle.classList.remove(...textColors);
+            heroTitle.classList.add(textColors[index]);
+            heroTitle.textContent = subTexts[index];
+
+            index = (index + 1) % images.length;
+        }
+
+        setInterval(changeSlide, 3000);
+    </script>
+
+</body>
+</html>
+

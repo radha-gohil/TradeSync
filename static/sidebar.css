@@ -1,0 +1,398 @@
+/* General Reset */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Navbar Styling */
+.navbar-brand {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #f8f9fa !important;
+}
+
+.navbar-nav .nav-link {
+    font-size: 1rem;
+    color: #ccc !important;
+    padding: 10px 15px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Icons for Login & Sign Up */
+.navbar-nav .nav-link i {
+    margin-right: 5px;
+}
+
+/* Hover Effect */
+.navbar-nav .nav-link:hover {
+    color: #fff !important;
+}
+
+/* Active Link */
+.navbar-nav .nav-link.active,
+.navbar-nav .nav-link:focus {
+    /*background-color: #dc3545 !important; /* Red color */
+    color: white !important;
+    border-radius: 5px;
+}
+
+/* Click Animation */
+.navbar-nav .nav-link:active {
+    transform: scale(0.9);
+    transition: transform 0.1s ease-in-out;
+}
+
+/* Carousel Styling */
+.carousel-inner img {
+    max-height: 400px;
+    object-fit: cover;
+    width: 100%;
+}
+
+/* Caption Styling */
+.carousel-caption {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 12px;
+    border-radius: 10px;
+}
+
+/* Carousel Controls */
+.carousel-control-prev,
+.carousel-control-next {
+    filter: invert(100%);
+    width: 5%;
+}
+
+.carousel-control-prev:focus,
+.carousel-control-next:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.key-features{
+    margin: 50px auto;
+    padding: 50px 0;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.feature-box {
+    padding: 20px;
+    text-align: center;
+}
+
+.feature-icon {
+    font-size: 40px;
+    color: #ff4500;
+    margin-bottom: 15px;
+}
+
+.feature-box h4 {
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.feature-box p {
+    color: #555;
+}
+
+/* Stock Table Styling */
+.stock-table {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+    border: 1px solid #ddd;
+}
+
+.stock-table th {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+}
+
+.stock-table td {
+    padding: 8px;
+    text-align: center;
+}
+
+/* Hover Effect */
+.stock-table tr:hover {
+    background-color: #f2f2f2;
+}
+
+/* Services Section */
+.services {
+    text-align: center;
+    background-color: #f8f8f8;
+    padding: 60px 0;
+    margin-bottom: 0px;
+}
+
+.services-header h2 {
+    font-size: 36px;
+    color: #222;
+    margin-bottom: 20px;
+}
+
+/* Background Image */
+.service-bg img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: -80px; /* Pull services up */
+}
+
+/* Grid Layout */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+/* Service Cards */
+.service-card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-align: center;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Service Icon */
+.service-icon {
+    background: #222;
+    display: inline-block;
+    padding: 10px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+.service-icon img {
+    width: 40px;
+    height: 40px;
+}
+
+/* Service Text */
+.service-card h3 {
+    font-size: 22px;
+    color: #222;
+    margin-bottom: 10px;
+}
+
+.service-card p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+/* More Button */
+.more-btn {
+    display: inline-block;
+    padding: 8px 15px;
+    background-color: #000;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+
+.more-btn:hover {
+    background-color: #444;
+}
+/* About Section */
+.about {
+    background-color: #f8f8f8;
+    text-align: center;
+    padding: 100px 0;
+    margin-top: -20px;
+}
+
+.about-header h2 {
+    font-size: 36px;
+    color: #222;
+    margin-bottom: 40px;
+}
+
+/* About Container */
+.about-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: auto;
+    padding: 40px;
+}
+
+/* About Image */
+.about-image img {
+    width: 300px;
+    height: 300px;
+    border-radius: 10px;
+    margin-right: 20px;
+}
+
+/* About Content */
+.about-content {
+    max-width: 600px;
+    text-align: left;
+}
+
+.about-content h3 {
+    font-size: 26px;
+    color: #222;
+    margin-bottom: 15px;
+}
+
+.about-content p {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* About Values */
+.about-values {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.value-box {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 30%;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.value-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.value-box img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
+}
+
+.value-box h4 {
+    font-size: 20px;
+    color: #222;
+    margin-bottom: 10px;
+}
+
+.value-box p {
+    font-size: 14px;
+    color: #555;
+}
+
+/* Style for Stock Search Form */
+form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+form input {
+    width: 300px;
+    padding: 10px;
+    border: 2px solid #007bff;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+form button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+
+/* Icon Buttons */
+.feature-box {
+    background: #ffffff !important;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out !important;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.feature-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+    color: #007bff;
+    transition: transform 0.2s, box-shadow 0.2s;
+    padding: 15px;
+    border-radius: 50%;
+    background: #f8f9fa;
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+}
+
+.feature-box:hover {
+    background-color: #007bff;
+    color: white;
+    transform: translateY(-5px);
+}
+
+.feature-box:hover .feature-icon {
+    color: white;
+    background-color: #0056b3;
+}
+
+/* Click Effect */
+.feature-box:active {
+    transform: scale(0.95);
+}
+
+.feature-icon:active {
+    transform: scale(0.85);
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+
+

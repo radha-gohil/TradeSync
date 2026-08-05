@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeBot Assistant</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'bot.css' %}">
+</head>
+<body>
+
+    <!-- Chat Container -->
+    <div class="chat-container">
+        <!-- Default User Message -->
+        <div class="user-chat-box">
+            <img src="{% static 'images/human.jpeg' %}" alt="User" id="userImage" width="50">
+            <div class="user-chat-area">Hii</div>
+        </div>
+
+        <!-- Default AI Welcome Message -->
+        <div class="ai-chat-box">
+            <img src="{% static 'images/bot.jpg' %}" alt="AI" id="aiImage" width="50">
+            <div class="ai-chat-area">
+                Welcome to TradeSync AI!🤖 Get real-time insights and smart trade suggestions to stay ahead in the market.
+            </div>
+        </div>
+    </div>
+
+    <!-- User Input Area -->
+    <div class="prompt-area">
+        <input type="text" id="prompt" placeholder="Ask me about trading..." autofocus>
+
+        <!-- Send Button -->
+        <button id="submit">
+            <img src="{% static 'images/enter.jpg' %}" alt="Send">
+        </button>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="{% static 'bot.js' %}"></script>
+</body>
+</html>

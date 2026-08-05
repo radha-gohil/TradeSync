@@ -1,0 +1,194 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | TradeSync</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="{% static 'portfo.css' %}">
+</head>
+<body>
+    
+    <div class="d-flex">
+
+        <div id="sidebar" class="sidebar">
+            <!-- Logo & Website Name -->
+            <div class="logo-section">
+                <img src="{% static 'images/logo.jpg' %}" alt="TradeSync Logo" class="logo">
+                <span class="TradeSync">TradeSync</span>
+            </div>
+
+            <!-- Profile Section -->
+            <div class="profile-section">
+                <img src="{% static 'images/profile.jpeg' %}" alt="Profile Picture" class="profile-pic">
+                <div class="profile-info">
+                    <span class="username">{{ user.username }}</span>
+                    <span class="email">{{ user.email }}</span>
+                </div>
+            </div>
+
+            <!-- Sidebar Navigation -->
+            <ul class="sidebar-nav">
+                <li><a href="{% url 'pdashboard' %}"><i class="fas fa-home"></i> <span class="sidebar-text">Home</span></a></li>
+                <li><a href="{% url 'portfolio' %}"><i class="fas fa-briefcase"></i> <span class="sidebar-text">Portfolio</span></a></li>
+                <li><a href="{% url 'buy_sell' %}"><i class="fas fa-exchange-alt"></i> <span class="sidebar-text">Trade</span></a></li>
+                <li><a href="{% url 'transactions_history' %}"><i class="fas fa-history"></i> <span class="sidebar-text">Transaction History</span></a></li>
+                <li><a href="#"><i class="fas fa-chart-line"></i> <span class="sidebar-text">Market</span></a></li>
+                <li><a href="{% url 'setting' %}"><i class="fas fa-cog"></i> <span class="sidebar-text">Settings</span></a></li>
+                <li><a href="{% url 'logout' %}" class="logout-btn"><i class="fas fa-sign-out-alt"></i> <span class="sidebar-text">Logout</span></a></li>
+            </ul>
+        </div>
+
+        <div id="main-content" class="main-content">
+            <div class="container">   
+                <h1>Portfolio Performance</h1>
+
+                <div class="performance-summary">
+                    <div class="summary-item">
+                        <h3>Total Investment</h3>
+                        <p>₹{{ total_investments }}</p>
+                    </div> 
+                    <div class="summary-item">
+                        <h3>Current Value</h3>
+                        <p>₹{{ current_value }}</p>
+                    </div>
+                    <div class="summary-item">
+                        <h3>Total Profit/Loss</h3>
+                        <p class="{% if total_profit_loss >= 0 %}profit{% else %}loss{% endif %}">₹{{ total_profit_loss }}</p>
+                    </div>
+                    <div class="summary-item">
+                        <h3>Profit/Loss %</h3>  <!-- Fixed duplicate "Total Investment" -->
+                        <p class="{% if profit_loss_percent >= 0 %}profit{% else %}loss{% endif %}">{{ profit_loss_percent }}%</p>
+                    </div>
+                </div>
+
+                {% if holdings %}
+                <div class="holdings_section">
+                    <h2>Your Holdings</h2>
+                    <table class="holdings-table">
+                        <thead>
+                            <tr>
+                                <th>Stock</th>
+                                <th>Quantity</th>
+                                <th>Purchase Price (₹)</th>
+                                <th>Purchase Date</th>
+                                <th>Current Price (₹)</th>
+                                <th>Total Value (₹)</th>
+                                <th>Profit/Loss (₹)</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stock in holdings %}
+                            <tr>
+                                <td>{{ stock.symbol }}</td>
+                                <td>{{ stock.quantity }}</td>
+                                <td>{{ stock.purchase_price }}</td>
+                                <td>{{ stock.purchase_date|date:"d M Y" }}</td>
+                                <td>{{ stock.current_price }}</td>
+                                <td>{{ stock.total_value }}</td>
+                                <td class="{% if stock.profit_loss >= 0 %}profit{% else %}loss{% endif %}">
+                                    {{ stock.profit_loss }}
+                                </td>
+                                <td>
+                                    {% if stock.id %}
+                                        <a href="{% url 'delete_stock' stock.id %}" class="delete-btn">🗑️ Delete</a>
+                                    {% else %}
+                                        <span class="disabled-btn">N/A</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="no-holdings">You don't have any stocks in your portfolio.</p>
+                {% endif %}
+                <h2>📈 Portfolio Value Over Time</h2>
+                <div class="chart-container">
+                    <canvas id="portfolioHistoryChart"></canvas>
+                </div>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    fetchPortfolioHistory();
+                });
+                
+                function fetchPortfolioHistory() {
+                    fetch("/porfolio_history") // This should match your Django URL pattern
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.error) {
+                                console.error("Error fetching portfolio history:", data.error);
+                                return;
+                            }
+                            renderPortfolioHistoryChart(data.dates, data.values);
+                        })
+                        .catch(error => console.error("Error:", error));
+                }
+                
+                function renderPortfolioHistoryChart(dates, values) {
+                    const ctx = document.getElementById("portfolioHistoryChart").getContext("2d");
+                
+                    new Chart(ctx, {
+                        type: "line",
+                        data: {
+                            labels: dates,
+                            datasets: [{
+                                label: "Portfolio Value",
+                                data: values,
+                                borderColor: "#3182ce",
+                                backgroundColor: "rgba(49, 130, 206, 0.2)",
+                                borderWidth: 2,
+                                pointRadius: 3,
+                                fill: true,
+                                tension: 0.2
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: "Date"
+                                    }
+                                },
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: "Portfolio Value ($)"
+                                    },
+                                    beginAtZero: false
+                                }
+                            }
+                        }
+                    });
+                }
+            </script>
+            </div>
+        </div>    
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const sidebar = document.getElementById("sidebar");
+            const mainContent = document.querySelector(".main-content");
+
+            sidebar.addEventListener("mouseenter", function () {
+                sidebar.classList.add("expanded");
+                mainContent.classList.add("collapsed");
+            });
+
+            sidebar.addEventListener("mouseleave", function () {
+                sidebar.classList.remove("expanded");
+                mainContent.classList.remove("collapsed");
+            });
+        });
+    </script>
+</body>
+</html>

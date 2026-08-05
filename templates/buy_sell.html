@@ -1,0 +1,179 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BUY-SELL | TradeSync</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="{% static 'buy&sell.css' %}">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div class="d=flex">
+        <div id="sidebar" class="sidebar">
+            <!-- Logo & Website Name -->
+            <div class="logo-section">
+                <img src="{% static 'images/logo.jpg' %}" alt="TradeSync Logo" class="logo">
+                <span class="TradeSync">TradeSync</span>
+            </div>
+
+            <!-- Profile Section -->
+            <div class="profile-section">
+                <img src="{% static 'images/profile.jpeg' %}" alt="Profile Picture" class="profile-pic">
+                <div class="profile-info">
+                    <span class="username">{{ user.username }}</span>
+                    <span class="email">{{ user.email }}</span>
+                </div>
+            </div>
+
+            <!-- Sidebar Navigation -->
+            <ul class="sidebar-nav">
+                <li><a href="{% url 'pdashboard' %}"><i class="fas fa-home"></i> <span class="sidebar-text">Home</span></a></li>
+                <li><a href="{% url 'portfolio' %}"><i class="fas fa-briefcase"></i> <span class="sidebar-text">Portfolio</span></a></li>
+                <li><a href="{% url 'buy_sell' %}"><i class="fas fa-exchange-alt"></i> <span class="sidebar-text">Trade</span></a></li>
+                <li><a href="{% url 'transactions_history' %}"><i class="fas fa-history"></i> <span class="sidebar-text">Transaction History</span></a></li>
+                <li><a href="#"><i class="fas fa-chart-line"></i> <span class="sidebar-text">Market</span></a></li>
+                <li><a href="{% url 'setting' %}"><i class="fas fa-cog"></i> <span class="sidebar-text">Settings</span></a></li>
+                <li><a href="{% url 'logout' %}" class="logout-btn"><i class="fas fa-sign-out-alt"></i> <span class="sidebar-text">Logout</span></a></li>
+            </ul>
+        </div>
+
+        <div id="main-content" class="main-content">
+            <div class="container">
+                <h1>Search and Trade Stocks</h1>
+
+                <!-- Stock Search Form -->
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="stock_symbol" placeholder="Enter Stock Symbol (e.g., AAPL)" required>
+                    <button type="submit">Search</button>
+                </form>
+
+                {% if stock_data %}
+                    <h2>{{ searched_symbol }} - ₹{{ stock_data.current_price }}</h2>
+                    <p>High: ₹{{ stock_data.high_price }}</p>
+                    <p>Low: ₹{{ stock_data.low_price }}</p>
+
+                    <!-- Chart Controls -->
+                    <h3>Price Chart</h3>
+                    <div class="chart-controls">
+                        <button class="range-btn" data-range="1d">1D</button>
+                        <button class="range-btn" data-range="5d">5D</button>
+                        <button class="range-btn" data-range="10d">10D</button>
+                        <button class="range-btn" data-range="1y">1Y</button>
+                    </div>
+                    <div id="stockChart" style="width:100%;height:400px;"></div>
+
+                    <script>
+                        const rangeButtons = document.querySelectorAll('.range-btn');
+                        const stockSymbol = "{{ searched_symbol }}";
+
+                        function loadChart(range) {
+                            fetch(`/get_stock_chart_data/?symbol=${stockSymbol}&range=${range}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.error) {
+                                        console.error("Error fetching stock data:", data.error);
+                                        return;
+                                    }
+
+                                    const candlestickData = [{
+                                        x: data.dates,
+                                        open: data.open,
+                                        high: data.high,
+                                        low: data.low,
+                                        close: data.close,
+                                        type: 'candlestick',
+                                        name: stockSymbol
+                                    }];
+
+                                    const tradeMarkers = data.trade_markers.map(trade => ({
+                                        x: [trade.date],
+                                        y: [trade.price],
+                                        mode: 'markers+text',
+                                        marker: {
+                                            color: trade.type === 'BUY' ? 'green' : 'red',
+                                            size: 12
+                                        },
+                                        text: [`${trade.type} ${trade.quantity}`],
+                                        textposition: 'top center',
+                                        name: trade.type
+                                    }));
+
+                                    const layout = {
+                                        margin: { t: 30 },
+                                        xaxis: { title: 'Date' },
+                                        yaxis: { title: 'Price (₹)' },
+                                        dragmode: 'zoom'
+                                    };
+
+                                    Plotly.newPlot('stockChart', [...candlestickData, ...tradeMarkers], layout);
+                                })
+                                .catch(error => console.error("Error loading chart:", error));
+                        }
+
+                        // Load default chart (1D)
+                        loadChart('1d');
+
+                        rangeButtons.forEach(button => {
+                            button.addEventListener('click', () => {
+                                const range = button.dataset.range;
+                                loadChart(range);
+                            });
+                        });
+
+                        // Auto-refresh chart after Buy/Sell
+                        function refreshChart() {
+                            const activeRange = document.querySelector('.range-btn.active')?.dataset.range || '1d';
+                            loadChart(activeRange);
+                        }
+
+                        document.querySelectorAll("form[action='{% url 'buy_stock' %}'], form[action='{% url 'sell_stock' %}']")
+                            .forEach(form => {
+                                form.addEventListener("submit", function() {
+                                    setTimeout(refreshChart, 2000);  // Refresh chart after 2 seconds
+                                });
+                            });
+                    </script>
+
+                    <!-- Buy Form -->
+                    <h3>Buy Stocks</h3>
+                    <form method="POST" action="{% url 'buy_stock' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="stock_symbol" value="{{ searched_symbol }}">
+                        <input type="number" name="quantity" placeholder="Quantity" min="1" required>
+                        <button type="submit">Buy</button>
+                    </form>
+
+                    <!-- Sell Form -->
+                    <h3>Sell Stocks</h3>
+                    <form method="POST" action="{% url 'sell_stock' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="stock_symbol" value="{{ searched_symbol }}">
+                        <input type="number" name="quantity" placeholder="Quantity" min="1" required>
+                        <button type="submit">Sell</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const sidebar = document.getElementById("sidebar");
+            const mainContent = document.querySelector(".main-content");
+
+            sidebar.addEventListener("mouseenter", function () {
+                sidebar.classList.add("expanded");
+                mainContent.classList.add("collapsed");
+            });
+
+            sidebar.addEventListener("mouseleave", function () {
+                sidebar.classList.remove("expanded");
+                mainContent.classList.remove("collapsed");
+            });
+        });
+    </script>
+</body>
+</html>

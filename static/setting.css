@@ -1,0 +1,95 @@
+/* General Page Styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    padding: 15px 30px;
+    color: white;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+}
+
+.nav-links li {
+    margin: 0 15px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.logout-btn {
+    background-color: red;
+    padding: 8px 15px;
+    border-radius: 5px;
+}
+
+.logout-btn:hover {
+    background-color: darkred;
+}
+
+/* Settings Container */
+.settings-container {
+    width: 50%;
+    margin: 50px auto;
+    padding: 20px;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.settings-container h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.settings-container p {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+/* Delete Account Section */
+.account-section {
+    margin-top: 30px;
+    padding: 20px;
+    border-top: 1px solid #ccc;
+}
+
+.account-section h3 {
+    font-size: 1.5rem;
+    color: red;
+}
+
+.delete-btn {
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.delete-btn:hover {
+    background-color: darkred;
+}

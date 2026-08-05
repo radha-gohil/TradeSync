@@ -1,0 +1,372 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeSync Dashboard</title>
+
+    <!-- Bootstrap & FontAwesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'home2.css' %}">
+</head>
+<body>
+
+    <!-- Main Wrapper -->
+    <div class="d-flex">
+        
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar">
+            <!-- Logo & Website Name -->
+            <div class="logo-section">
+                <img src="{% static 'images/logo.jpg' %}" alt="TradeSync Logo" class="logo">
+                <span class="TradeSync">TradeSync</span>
+            </div>
+
+            <!-- Profile Section -->
+            <div class="profile-section">
+                <img src="{% static 'images/profile.jpeg' %}" alt="Profile Picture" class="profile-pic">
+                <div class="profile-info">
+                    <span class="username">{{ user.username }}</span>
+                    <span class="email">{{ user.email }}</span>
+                </div>
+            </div>
+
+            <!-- Sidebar Navigation -->
+            <ul class="sidebar-nav">
+                <li><a href="{% url 'dashboard' %}"><i class="fas fa-home"></i> <span class="sidebar-text">Home</span></a></li>
+                <li><a href="{% url 'plogin' %}"><i class="fas fa-wallet"></i> <span class="sidebar-text">Portfolio</span></a></li>
+                <li><a href="{% url 'searchstock' %}"><i class="fas fa-search"></i> <span class="sidebar-text">Stock Search</span></a></li>
+                <li><a href="{% url 'stockprediction' %}"><i class="fas fa-chart-bar"></i> <span class="sidebar-text">Stock Prediction</span></a></li>
+                <li><a href="{% url 'trading_bot' %}"><i class="fas fa-robot"></i> <span class="sidebar-text">Trading Bot</span></a></li>
+                <li><a href="{% url 'logout' %}" class="logout-btn"><i class="fas fa-sign-out-alt"></i> <span class="sidebar-text">Logout</span></a></li>
+            </ul>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div id="main-content" class="main-content">
+            <h2>Welcome to TradeSync Dashboard</h2>
+            <p>Your stock market assistant.</p>
+
+            <div class="dashboard-sections">
+                <div class="top-movers-container">
+                    <!-- Top Gainers -->
+                    <div class="movers-box gainers">
+                        <h4 class="movers-title gainers-title">Top Gainers</h4>
+                        <div class="scrolling-wrapper">
+                            <div class="scrolling-text">
+                                {% for stock in gainers %}
+                                    <div class="stock-item gainers-text">
+                                        <strong>{{ stock.name }}</strong> ({{ stock.ticker }}) 📈 <br>
+                                        Price: ₹{{ stock.close }} <br>
+                                        Change: +₹{{ stock.change_value }} (+{{ stock.change }}%)
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Top Losers -->
+                    <div class="movers-box losers">
+                        <h4 class="movers-title losers-title">Top Losers</h4>
+                        <div class="scrolling-wrapper">
+                            <div class="scrolling-text">
+                                {% for stock in losers %}
+                                    <div class="stock-item losers-text">
+                                        <strong>{{ stock.name }}</strong> ({{ stock.ticker }}) 📉 <br>
+                                        Price: ₹{{ stock.close }} <br>
+                                        Change: -₹{{ stock.change_value }} (-{{ stock.change }}%)
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="container mt-5">
+                    <h4 class="mb-3">📈 Live Stock Prices</h4>
+                
+                    <!-- Stock Selection Form -->
+                    <form id="stockForm">
+                        <select id="stockSelect" name="symbols" multiple="multiple" class="form-control">
+                            {% for stock in stock_list %}
+                                <option value="{{ stock.symbol }}">{{ stock.name }} ({{ stock.symbol }})</option>
+                            {% endfor %}
+                        </select>
+                        <button type="button" id="resetSelection" class="btn btn-secondary mt-2">Reset Selection</button>
+                    </form>
+                
+                    <!-- Display Stock Data -->
+                    <table class="table table-hover table-bordered text-center mt-4">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>SYMBOL</th>
+                                <th>NAME</th>
+                                <th>CURRENT PRICE</th>
+                                <th>OPEN</th>
+                                <th>CLOSE</th>
+                                <th>HIGH</th>
+                                <th>LOW</th>
+                                <th>VOLUME</th>
+                                <th>CHANGE</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stockTable">
+                            {% for stock in stocks %}
+                            <tr class="stock-info" data-symbol="{{ stock.symbol }}">
+                                <td><strong>{{ stock.symbol }}</strong></td>
+                                <td>{{ stock.name }}</td>
+                                <td><strong>{{ stock.price }}</strong></td>
+                                <td>{{ stock.open }}</td>
+                                <td>{{ stock.close }}</td>
+                                <td>{{ stock.high }}</td>
+                                <td>{{ stock.low }}</td>
+                                <td>{{ stock.volume }}</td>
+                                <td class="{% if stock.change < 0 %}text-danger{% else %}text-success{% endif %}">{{ stock.change }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="market-news-section">
+                    <h3>Market News</h3>
+                    <div id="news-list" class="news-grid">
+                        {% for article in news|slice:":6" %}  <!-- Show 6 initially -->
+                        <div class="news-card">
+                            <img src="{{ article.image }}" alt="News Image">
+                            <div class="news-content">
+                                <h4>{{ article.title }}</h4>
+                                <p>{{ article.description|truncatechars:80 }}</p>
+                                <a href="{{ article.url }}" target="_blank">Read More</a>
+                                <span class="news-source">{{ article.source }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                
+                    <button id="view-more-news">View More</button>
+                </div>
+                
+                <style>
+                    .market-news-section {
+                        background: #fff;
+                        padding: 20px;
+                        border-radius: 8px;
+                        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+                    }
+                
+                    /* 🟦 News Grid - Show 3 or 4 per row */
+                    .news-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
+                        gap: 15px;
+                        justify-content: center; /* Centers the content */
+                        max-width: 1200px; /* Prevents too many cards in one row */
+                        margin: 0 auto;
+                    }
+                
+                    @keyframes fadeIn {
+                        from { opacity: 0; transform: translateY(10px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+
+                    /* 🟩 News Card (Square Look) */
+                    .news-card {
+                        animation: fadeIn 0.5s ease-in-out;
+                        background: #f9f9f9;
+                        padding: 15px;
+                        border-radius: 8px;
+                        transition: 0.3s ease-in-out;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        text-align: center;
+                        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+                    }
+                
+                    .news-card:hover {
+                        transform: scale(1.05);
+                        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+                    }
+                
+                    .news-card img {
+                        width: 100%;
+                        height: 150px;
+                        border-radius: 5px;
+                        object-fit: cover;
+                    }
+                
+                    .news-content h4 {
+                        font-size: 14px;
+                        margin-top: 10px;
+                    }
+                
+                    .news-content p {
+                        font-size: 12px;
+                        color: #555;
+                    }
+                
+                    .news-content a {
+                        display: inline-block;
+                        padding: 5px 8px;
+                        background: #007bff;
+                        color: #fff;
+                        text-decoration: none;
+                        border-radius: 5px;
+                        font-size: 12px;
+                        margin-top: 5px;
+                    }
+                
+                    .news-source {
+                        display: block;
+                        font-size: 11px;
+                        color: gray;
+                        margin-top: 5px;
+                    }
+                
+                    /* 🟢 View More Button */
+                    #view-more-news {
+                        display: block;
+                        margin: 15px auto;
+                        padding: 8px 15px;
+                        border: none;
+                        background: #007bff;
+                        color: white;
+                        cursor: pointer;
+                        border-radius: 5px;
+                    }
+                
+                    #view-more-news:hover {
+                        background: #0056b3;
+                    }
+                </style>
+                                
+
+                
+                
+            </div>
+        </div>
+
+    </div>
+
+                    <!-- Include jQuery, Bootstrap & Select2 JS -->
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+                    
+                    <script>
+                        $(document).ready(function() {
+                            // Initialize Select2 Multi-Select
+                            $('#stockSelect').select2({
+                                placeholder: "Choose stocks...",
+                                allowClear: true,
+                                width: '100%',
+                                //theme: "bootstrap-5",
+                            });
+                    
+                            // Filter Stock Table Dynamically
+                            $('#stockSelect').on('change', function () {
+                                let selectedSymbols = $(this).val() || [];
+                                
+                                if (selectedSymbols.length === 0) {
+                                    $(".stock-info").show();  // Show all stocks if nothing is selected
+                                } else {
+                                    $(".stock-info").each(function () {
+                                        let symbol = $(this).data("symbol");
+                                        $(this).toggle(selectedSymbols.includes(symbol));
+                                    });
+                                }
+                            });
+                    
+                            // Reset Selection & Show All Stocks
+                            $('#resetSelection').on('click', function () {
+                                $('#stockSelect').val(null).trigger('change');  // Clear selection
+                                $(".stock-info").show();  // Show all stocks
+                            });
+                        });
+                    </script>
+    
+    <!-- Sidebar Toggle Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const sidebar = document.getElementById("sidebar");
+            const mainContent = document.querySelector(".main-content");
+
+            sidebar.addEventListener("mouseenter", function () {
+                sidebar.classList.add("expanded");
+                mainContent.classList.add("collapsed");
+            });
+
+            sidebar.addEventListener("mouseleave", function () {
+                sidebar.classList.remove("expanded");
+                mainContent.classList.remove("collapsed");
+            });
+        });
+    </script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let allNews = {{ news|safe }};  // Get all news articles
+            let newsList = document.getElementById("news-list");
+            let viewMoreBtn = document.getElementById("view-more-news");
+            let shownNewsCount = 3;
+        
+            viewMoreBtn.addEventListener("click", function () {
+                let moreNews = allNews.slice(shownNewsCount, shownNewsCount + 3); // Get next 3 news items
+                shownNewsCount += 3;
+        
+                moreNews.forEach(article => {
+                    let newsCard = document.createElement("div");
+                    newsCard.classList.add("news-card");
+                    newsCard.innerHTML = `
+                        <img src="${article.image}" alt="News Image">
+                        <div class="news-content">
+                            <h4>${article.title}</h4>
+                            <p>${article.description.substring(0, 100)}...</p>
+                            <a href="${article.url}" target="_blank">Read More</a>
+                            <span class="news-source">${article.source}</span>
+                        </div>
+                    `;
+                    newsList.appendChild(newsCard);
+                });
+        
+                if (shownNewsCount >= allNews.length) {
+                    viewMoreBtn.style.display = "none"; // Hide button when all news is shown
+                }
+            });
+        });
+        </script>
+        
+        <script>
+            function refreshNews() {
+                fetch("{% url 'market_news' %}")
+                    .then(response => response.text())
+                    .then(data => {
+                        let parser = new DOMParser();
+                        let newDoc = parser.parseFromString(data, "text/html");
+                        let newNewsList = newDoc.querySelector("#news-list").innerHTML;
+                        document.querySelector("#news-list").innerHTML = newNewsList;
+                    })
+                    .catch(error => console.log("Error refreshing news:", error));
+            }
+            
+            setInterval(refreshNews, 180000);  // Refresh every 3 minutes
+            </script>
+            
+        
+
+</body>
+</html>
+
+
+
+
+

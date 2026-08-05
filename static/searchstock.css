@@ -1,0 +1,167 @@
+/* Sidebar Styles */
+.sidebar {
+    width: 80px;
+    background-color: #1e1e2f;
+    color: white;
+    height: 100vh;
+    transition: width 0.3s ease-in-out;
+    position: fixed;
+    overflow: hidden;
+}
+
+.sidebar.expanded {
+    width: 250px;
+}
+
+/* Logo Section - Improved Alignment */
+.logo-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 10px 0;
+}
+
+.logo {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    border: 2px solid white;
+    object-fit: cover; /* Ensures image fits well */
+}
+
+/* Profile Section */
+.profile-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 15px;
+    text-align: center;
+}
+
+.profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.profile-info {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    margin-left: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.sidebar.expanded .profile-section {
+    flex-direction: row;
+    justify-content: flex-start;
+    padding-left: 20px;
+}
+
+.sidebar.expanded .profile-info {
+    display: flex;
+    opacity: 1;
+}
+
+/* Username & Email Styling */
+.username {
+    font-weight: bold;
+    font-size: 16px;  /* Increased font size */
+    color: white;
+}
+
+.email {
+    font-size: 14px;  /* Slightly larger */
+    color: #ccc;
+}
+
+/* Sidebar Navigation */
+.sidebar-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav li {
+    padding: 10px;
+    text-align: left;
+}
+
+.sidebar-nav a {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 12px;  /* Increased padding */
+    font-size: 22px;  /* Larger font */
+    font-weight: bold;  /* Bold text */
+}
+
+.sidebar-nav a i {
+    width: 30px;
+    text-align: center;
+}
+
+.sidebar-text {
+    display: none;
+    margin-left: 10px;
+}
+
+.sidebar.expanded .sidebar-text {
+    display: inline-block;
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 80px;
+    padding: 20px;
+    width: calc(100% - 80px);
+    transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+}
+
+.sidebar.expanded ~ .main-content {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+}
+
+/* Sidebar Hover Effect */
+.sidebar:hover:not(.expanded) {
+    width: 100px;
+}
+
+.sidebar:hover .sidebar-text {
+    display: inline-block;
+}
+
+.sidebar:hover .profile-info {
+    display: flex;
+}
+
+
+/* Show Name Only When Sidebar is Expanded */
+.sidebar.expanded .TradeSync {
+    display: block; /* Only visible when expanded */
+}
+
+/* Sidebar Navigation Hover Effect */
+.sidebar-nav a:hover {
+    background-color: #343450; /* Slightly lighter background */
+    color: #ffcc00; /* Highlighted text color */
+    border-radius: 8px; /* Smooth rounded effect */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.TradeSync {
+    font-weight: bold;
+    font-size: 18px;
+    letter-spacing: 2px;
+    margin-top: 5px;
+    text-align: center;
+    white-space: nowrap; /* Prevents text from breaking */
+    display: none; /* Hidden by default */
+}

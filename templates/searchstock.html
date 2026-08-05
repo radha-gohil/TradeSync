@@ -1,0 +1,259 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Search</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'stockprediction.css' %}">
+</head>
+<body class="bg-gray-100 p-0">
+    <div class="d-flex">
+        <div id="sidebar" class="sidebar">
+            <!-- Logo & Website Name -->
+            <div class="logo-section">
+                <img src="{% static 'images/logo.jpg' %}" alt="TradeSync Logo" class="logo">
+                <span class="TradeSync">TradeSync</span>
+            </div>
+
+            <!-- Profile Section -->
+            <div class="profile-section">
+                <img src="{% static 'images/profile.jpeg' %}" alt="Profile Picture" class="profile-pic">
+                <div class="profile-info">
+                    <span class="username">{{ user.username }}</span>
+                    <span class="email">{{ user.email }}</span>
+                </div>
+            </div>
+
+            <!-- Sidebar Navigation -->
+            <ul class="sidebar-nav">
+                <li><a href="{% url 'dashboard' %}"><i class="fas fa-home"></i> <span class="sidebar-text">Home</span></a></li>
+                <li><a href="{% url 'plogin' %}"><i class="fas fa-wallet"></i> <span class="sidebar-text">Portfolio</span></a></li>
+                <li><a href="{% url 'searchstock' %}"><i class="fas fa-search"></i> <span class="sidebar-text">Stock Search</span></a></li>
+                <li><a href="{% url 'stockprediction' %}"><i class="fas fa-chart-bar"></i> <span class="sidebar-text">Stock Prediction</span></a></li>
+                <li><a href="{% url 'trading_bot' %}"><i class="fas fa-robot"></i> <span class="sidebar-text">Trading Bot</span></a></li>
+                <li><a href="{% url 'logout' %}" class="logout-btn"><i class="fas fa-sign-out-alt"></i> <span class="sidebar-text">Logout</span></a></li>
+            </ul>
+        </div>
+        <div id="main-content" class="main-content">
+            <div class="max-w-4xl mx-auto bg-white p-6 shadow-lg rounded-lg">
+                <h2 class="text-2xl font-bold mb-4">Stock Search</h2>
+
+                <div class="relative">
+                    <input type="text" name="q" id="searchInput" placeholder="Search for a stock..." 
+                        class="w-full p-2 border rounded-lg mb-4">
+                    <div id="searchResults" class="absolute bg-white border w-full mt-1 z-50 rounded-lg shadow-md hidden"></div>
+                </div>
+
+                <div id="loading" class="hidden text-center text-gray-500">Loading...</div>
+
+                {% if error %}
+                    <p class="text-red-500">{{ error }}</p>
+                {% endif %}
+
+                {% if stock_data %}
+
+                    <!-- Company Information-->
+                    <!--<div id="stockDetails" class="mt-6">-->
+                    <h3 class="text-xl font-semibold mt-6">Company Information</h3>
+                    <h3 class="text-xl font-semibold">{{ stock_data.name }} ({{ stock_data.symbol }})</h3>
+                    <p>Industry: {{ stock_data.industry }}</p>
+                    <p>Sector: {{ stock_data.sector }}</p>
+                    <p>Description: {{ stock_data.description }}</p>
+                    <p>Headquarters:{{ stock_data.headquarters }}</p>
+                    <p>CEO: {{ stock_data.ceo }}</p>
+                    <p>Employees: {{ stock_data.employees }}</p>
+                    <p>Website: <a href="{{ stock_data.website }}" target="_blank">{{ stock_data.website }}</a></p>
+                    <p>Exchange: {{ stock_data.exchange }}</p>
+
+                    
+                    
+                    <p class="text-lg">Current Price: <span id="currentPrice">${{ stock_data.current_price }}</span></p>
+                    <p>High: ${{ stock_data.high }}</p>
+                    <p>Low: ${{ stock_data.low }}</p>
+                    <p>Open: ${{ stock_data.open }}</p> 
+                    <p>Close: ${{ stock_data.close }}</p>
+                    <p>Volume: {{ stock_data.volume }}</p>
+                    <p>Market Cap: ${{ stock_data.market_cap }}</p>
+                
+                    
+                    <!-- Fundamental Data -->
+                    <h3 class="text-xl font-semibold mt-6">Fundamental Data</h3>
+                    <p>Revenue: ${{ stock_data.revenue }}</p>
+                    <p>Net Income: ${{ stock_data.net_income }}</p>
+                    <p>EPS: {{ stock_data.eps }}</p>
+                    <p>Dividend Yield: {{ stock_data.dividend_yield }}</p>
+                    <p>PE Ratio: {{ stock_data.pe_ratio }}</p>
+                    <p>Debt-to-Equity Ratio: {{ stock_data.debt_to_equity }}</p>
+                    <p>Upcoming Earnings Date: {{ stock_data.earnings_date }}</p>
+                {% endif %}
+
+                {% if historical_data %}
+                    <h3 class="text-xl font-semibold mt-6">Stock Graph for {{ stock_data.symbol }}</h3>
+                    
+                    <script>
+                        var ctx = document.getElementById("stockChart").getContext("2d");
+                        var stockChart = new Chart(ctx, {
+                            type: "line",
+                            data: {
+                                labels: [{% for item in historical_data %}"{{ item.Date }}",{% endfor %}],
+                                datasets: [
+                                    {
+                                        label: "Close Price",
+                                        data: [{% for item in historical_data %}{{ item.Close }},{% endfor %}],
+                                        borderColor: "blue",
+                                        fill: false
+                                    },
+                                    {
+                                        label: "SMA 14",
+                                        data: [{% for item in historical_data %}{{ item.SMA_14 }},{% endfor %}],
+                                        borderColor: "green",
+                                        fill: false
+                                    },
+                                    {
+                                        label: "EMA 14",
+                                        data: [{% for item in historical_data %}{{ item.EMA_14 }},{% endfor %}],
+                                        borderColor: "orange",
+                                        fill: false
+                                    },
+                                    {
+                                        label: "RSI 14",
+                                        data: [{% for item in historical_data %}{{ item.RSI_14 }},{% endfor %}],
+                                        borderColor: "purple",
+                                        fill: false
+                                    },
+                                    {
+                                        label: "Bollinger Upper",
+                                        data: [{% for item in historical_data %}{{ item.BB_upper }},{% endfor %}],
+                                        borderColor: "red",
+                                        borderDash: [5, 5],  // Dashed Line
+                                        fill: false
+                                    },
+                                    {
+                                        label: "Bollinger Middle",
+                                        data: [{% for item in historical_data %}{{ item.BB_middle }},{% endfor %}],
+                                        borderColor: "gray",
+                                        fill: false
+                                    },
+                                    {
+                                        label: "Bollinger Lower",
+                                        data: [{% for item in historical_data %}{{ item.BB_lower }},{% endfor %}],
+                                        borderColor: "red",
+                                        borderDash: [5, 5],  // Dashed Line
+                                        fill: false
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                scales: {
+                                    x: { title: { display: true, text: "Date" } },
+                                    y: { title: { display: true, text: "Price" } }
+                                }
+                            }
+                        });
+                    </script>
+                {% endif %}
+
+                <!-- Earnings Calendar -->
+                {% if upcoming_earnings %}
+                    <h3 class="text-xl font-semibold mt-6">Upcoming Earnings Calendar</h3>
+                    <table class="w-full border-collapse border border-gray-300 mt-2">
+                        <thead>
+                            <tr class="bg-gray-200">
+                                <th class="border border-gray-300 p-2">Date</th>
+                                <th class="border border-gray-300 p-2">EPS Estimate</th>
+                                <th class="border border-gray-300 p-2">Revenue Estimate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for earnings in upcoming_earnings %}
+                                <tr class="text-center">
+                                    <td class="border border-gray-300 p-2">{{ earnings.date }}</td>
+                                    <td class="border border-gray-300 p-2">{{ earnings.eps_estimate }}</td>
+                                    <td class="border border-gray-300 p-2">{{ earnings.revenue_estimate }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+
+                <h3 class="text-lg font-semibold mt-4">Trending Stocks</h3>
+                <div class="grid grid-cols-3 gap-2 mt-2">
+                    {% for stock in trending_stocks %}
+                        <a href="{% url 'searchstock' %}?q={{ stock.symbol }}" class="p-2 bg-gray-200 rounded-md block">
+                            {{ stock.symbol }} ({{ stock.search_count }} searches)
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let searchInput = document.getElementById("searchInput");
+        let resultsContainer = document.getElementById("searchResults");
+        let loadingIndicator = document.getElementById("loading");
+        
+        searchInput.addEventListener("input", function () {
+            let query = this.value.trim();
+
+            if (query.length < 2) {
+                resultsContainer.innerHTML = "";
+                resultsContainer.classList.add("hidden");
+                return;
+            }
+
+            loadingIndicator.classList.remove("hidden");
+            fetch(`/searchstock?q=${query}`, {
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            })
+            .then(response => response.json())
+            .then(data => {
+                loadingIndicator.classList.add("hidden");
+                resultsContainer.innerHTML = "";
+                
+                if (data.error) {
+                    resultsContainer.innerHTML = `<p class='p-2 text-red-500'>${data.error}</p>`;
+                    resultsContainer.classList.remove("hidden");
+                    return;
+                }
+
+                let item = document.createElement("div");
+                item.classList.add("p-2", "hover:bg-gray-100", "cursor-pointer");
+                item.textContent = `${data.name} (${data.symbol}) - $${data.price}`;
+                item.addEventListener("click", function () {
+                    window.location.href = `/searchstock?q=${data.symbol}`;
+                });
+                
+                resultsContainer.appendChild(item);
+                resultsContainer.classList.remove("hidden");
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const sidebar = document.getElementById("sidebar");
+            const mainContent = document.querySelector(".main-content");
+
+            sidebar.addEventListener("mouseenter", function () {
+                sidebar.classList.add("expanded");
+                mainContent.classList.add("collapsed");
+            });
+
+            sidebar.addEventListener("mouseleave", function () {
+                sidebar.classList.remove("expanded");
+                mainContent.classList.remove("collapsed");
+            });
+        });
+    </script>
+
+</body>
+</html>

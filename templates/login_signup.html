@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Signup</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'test2.css' %}">
+</head>
+<body class="bg-black text-white flex justify-center items-center min-h-screen">
+    
+    <!-- Background Animation -->
+    <div class="absolute inset-0 bg-grid opacity-20 pointer-events-none"></div>
+
+    <div class="relative w-full max-w-2xl p-6 bg-gray-900 rounded-lg shadow-lg neon-border">
+        <!-- Toggle Buttons -->
+        <div class="flex justify-between mb-6">
+            <button id="login-btn" class="toggle-btn active">Login</button>
+            <button id="signup-btn" class="toggle-btn">Signup</button>
+        </div>
+
+        <!-- Message Display -->
+        {% if messages %}
+            <div>
+                {% for message in messages %}
+                    <p style="color: {% if message.tags == 'success' %}green{% else %}red{% endif %};">
+                        {{ message }}
+                    </p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Forms -->
+        <div class="form-container">
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form" method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                <input type="email" name="email" placeholder="Enter your email" class="auth-input" required>
+                <input type="password" name="password" placeholder="Enter your password" class="auth-input" required>
+                <button type="submit" class="auth-button">Login</button>
+            </form>
+
+            <!-- Signup Form -->
+            <form id="signup-form" class="auth-form hidden" method="POST" action="{% url 'signup' %}">
+                {% csrf_token %}
+                <input type="text" name="username" placeholder="Enter your username" class="auth-input" required>
+                <input type="email" name="email" placeholder="Enter your email" class="auth-input" required>
+                <input type="password" name="password" placeholder="Enter your password" class="auth-input" required>
+                <button type="submit" class="auth-button">Signup</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Inline JavaScript -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const loginBtn = document.getElementById("login-btn");
+            const signupBtn = document.getElementById("signup-btn");
+            const loginForm = document.getElementById("login-form");
+            const signupForm = document.getElementById("signup-form");
+
+            // Toggle between login and signup forms
+            loginBtn.addEventListener("click", function() {
+                loginForm.classList.remove("hidden");
+                signupForm.classList.add("hidden");
+                loginBtn.classList.add("active");
+                signupBtn.classList.remove("active");
+            });
+
+            signupBtn.addEventListener("click", function() {
+                loginForm.classList.add("hidden");
+                signupForm.classList.remove("hidden");
+                signupBtn.classList.add("active");
+                loginBtn.classList.remove("active");
+            });
+        });
+    </script>
+</body>
+</html>

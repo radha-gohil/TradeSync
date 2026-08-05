@@ -1,0 +1,140 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    background-color: rgb(30, 35, 40);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Chat container */
+.chat-container {
+    width: 60%;
+    height: 80vh;
+    background-color: rgb(45, 52, 59);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-size: 20px;
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* User chat box */
+.user-chat-box {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* AI chat box */
+.ai-chat-box {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+}
+
+/* User chat message */
+.user-chat-area {
+    max-width: 60%;
+    padding: 15px;
+    background-color: black;
+    color: white;
+    border-radius: 20px 20px 0px 20px;
+    font-size: 18px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* AI chat message */
+.ai-chat-area {
+    max-width: 60%;
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border-radius: 20px 20px 20px 0px;
+    font-size: 18px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* User and AI profile images */
+#userImage, #aiImage {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin: 5px;
+}
+
+/* User Image (Right Side) */
+#userImage {
+    margin-left: 10px;
+}
+
+/* AI Image (Left Side) */
+#aiImage {
+    margin-right: 10px;
+}
+
+/* Chat input area */
+.prompt-area {
+    width: 60%;
+    height: 15%;
+    background-color: rgb(45, 52, 59);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Input field */
+.prompt-area input {
+    width: 75%;
+    height: 50px;
+    background-color: black;
+    outline: none;
+    border: none;
+    border-radius: 25px;
+    padding: 15px;
+    color: white;
+    font-size: 18px;
+    box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.1);
+}
+
+/* Send button */
+.prompt-area button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: black;
+    border: none;
+    box-shadow: 2px 2px 10px black;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.prompt-area button img {
+    width: 70%;  /* Adjust to fit the button */
+    height: 70%;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
+.prompt-area button:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+}

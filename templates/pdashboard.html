@@ -1,0 +1,217 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | TradeSync</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="{% static 'dashb.css' %}">
+</head>
+<body>
+    
+    <div class="d-flex">
+        <div id="sidebar" class="sidebar">
+            <!-- Logo & Website Name -->
+            <div class="logo-section">
+                <img src="{% static 'images/logo.jpg' %}" alt="TradeSync Logo" class="logo">
+                <span class="TradeSync">TradeSync</span>
+            </div>
+
+            <!-- Profile Section -->
+            <div class="profile-section">
+                <img src="{% static 'images/profile.jpeg' %}" alt="Profile Picture" class="profile-pic">
+                <div class="profile-info">
+                    <span class="username">{{ user.username }}</span>
+                    <span class="email">{{ user.email }}</span>
+                </div>
+            </div>
+
+            <!-- Sidebar Navigation -->
+            <ul class="sidebar-nav">
+                <li><a href="{% url 'dashboard' %}"><i class="fas fa-home"></i> <span class="sidebar-text">Home</span></a></li>
+                <li><a href="{% url 'portfolio' %}"><i class="fas fa-briefcase"></i> <span class="sidebar-text">Portfolio</span></a></li>
+                <li><a href="{% url 'buy_sell' %}"><i class="fas fa-exchange-alt"></i> <span class="sidebar-text">Trade</span></a></li>
+                <li><a href="{% url 'transactions_history' %}"><i class="fas fa-history"></i> <span class="sidebar-text">Transaction History</span></a></li>
+                <li><a href="{% url 'setting' %}"><i class="fas fa-cog"></i> <span class="sidebar-text">Settings</span></a></li>
+                <li><a href="{% url 'logout' %}" class="logout-btn"><i class="fas fa-sign-out-alt"></i> <span class="sidebar-text">Logout</span></a></li>
+            </ul>
+        </div>
+        
+        <div id="main-content" class="main-content">
+            
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">  <!-- Left Section -->
+                        <!-- Profile & Points Section -->
+                        <div class="card profile-card">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Welcome, {{ user_profile.email }}</h5>
+                                <h5 class="card-title">Welcome, {{ user_profile.user_id }}</h5>
+                                <p class="points">Account Balance: <strong>{{ user_profile.points }}</strong> points</p>
+                            </div>
+                        </div>
+
+                        <!-- Portfolio Summary -->
+                        <div class="card portfolio-card mt-3">
+                            <div class="card-body">
+                                <h4 class="card-title"><i class="fas fa-wallet"></i> Portfolio Summary</h4>
+                                <p>Total Investment: <strong>{{ total_investment }}</strong> points</p>
+                            </div>
+                        </div>
+
+                        <!-- Stock Holdings -->
+                        <div class="card stocks-card mt-3">
+                            <div class="card-body">
+                                <h4 class="card-title"><i class="fas fa-chart-bar"></i> Stock Holdings</h4>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Stock</th>
+                                            <th>Quantity</th>
+                                            <th>Purchase Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for stock in portfolio %}
+                                            <tr>
+                                                <td>{{ stock.stock_symbol }}</td>
+                                                <td>{{ stock.quantity }}</td>
+                                                <td>{{ stock.purchase_price }} points</td>
+                                            </tr>
+                                        {% empty %}
+                                            <tr><td colspan="3" class="text-center">No stocks in portfolio yet.</td></tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Account Growth Rate -->
+                        <div class="card growth-card mt-3">
+                            <div class="card-body text-center">
+                                <h4 class="card-title"><i class="fas fa-chart-line"></i> Account Growth</h4>
+                                <p>Weekly Growth: 
+                                    <strong style="color: {% if weekly_growth > 0 %}green{% else %}red{% endif %};">
+                                        {{ weekly_growth }}%
+                                    </strong>
+                                </p>
+                                <p>Monthly Growth: 
+                                    <strong style="color: {% if monthly_growth > 0 %}green{% else %}red{% endif %};">
+                                        {{ monthly_growth }}%
+                                    </strong>
+                                </p>
+                            </div>
+                        </div>
+                        <!-- Recent Transactions -->
+                <div class="card transactions-card mt-3">
+                    <div class="card-body">
+                        <h4 class="card-title"><i class="fas fa-history"></i> Recent Transactions</h4>
+                        <ul class="list-group">
+                            {% for txn in transactions %}
+                                <li class="list-group-item {% if txn.transaction_type == 'Buy' %} text-success {% else %} text-danger {% endif %}">
+                                    <strong>{{ txn.date|date:"d M Y H:i" }}</strong> - 
+                                    {{ txn.transaction_type }} 
+                                    <strong>{{ txn.quantity }}</strong> 
+                                    {{ txn.stock_name }} at 
+                                    <strong>{{ txn.price }}</strong> points
+                                </li>
+                            {% empty %}
+                                <li class="list-group-item text-center">No recent transactions.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                    
+                    </div>
+                    <div class="col-md-6">  <!-- Right Section -->
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <h4 class="card-title"><i class="fas fa-chart-line"></i> Portfolio Growth</h4>
+                                <canvas id="portfolioChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function () {
+                                var portfolioData = {{ portfolio_data|safe }};
+                        
+                                var ctx = document.getElementById('portfolioChart').getContext('2d');
+                                new Chart(ctx, {
+                                    type: 'line',
+                                    data: {
+                                        labels: portfolioData.dates,
+                                        datasets: [{
+                                            label: 'Portfolio Value',
+                                            data: portfolioData.values,
+                                            borderColor: 'blue',
+                                            borderWidth: 2,
+                                            fill: false
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        scales: {
+                                            x: { title: { display: true, text: 'Date' } },
+                                            y: { title: { display: true, text: 'Value (Points)' } }
+                                        }
+                                    }
+                                });
+                            });
+                        </script>
+                        
+                        <!-- Investment Diversification Section -->
+                        <div class="card diversification-card mt-3">
+                            <div class="card-body">
+                                <h4 class="card-title"><i class="fas fa-chart-pie"></i> Investment Diversification</h4>
+                                <canvas id="investmentPieChart"></canvas>
+                            </div>
+                        </div>
+        
+                        <!-- Chart.js Script -->
+                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function () {
+                                var ctx = document.getElementById("investmentPieChart").getContext("2d");
+                                var investmentData = {{ investment_chart_data|safe }};
+        
+                                new Chart(ctx, {
+                                    type: "pie",
+                                    data: {
+                                        labels: investmentData.labels,
+                                        datasets: [{
+                                            data: investmentData.data,
+                                            backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"],
+                                        }]
+                                    },
+                                });
+                            });
+                        </script>
+        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const sidebar = document.getElementById("sidebar");
+            const mainContent = document.querySelector(".main-content");
+
+            sidebar.addEventListener("mouseenter", function () {
+                sidebar.classList.add("expanded");
+                mainContent.classList.add("collapsed");
+            });
+
+            sidebar.addEventListener("mouseleave", function () {
+                sidebar.classList.remove("expanded");
+                mainContent.classList.remove("collapsed");
+            });
+        });
+    </script>
+
+</body>
+</html>

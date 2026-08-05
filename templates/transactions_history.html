@@ -1,0 +1,112 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transaction History | TradeSync</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" type="text/css" href="{% static 'transaction_history.css' %}">
+</head>
+<body>
+    <div class="d-flex">
+        <div id="sidebar" class="sidebar">
+            <!-- Logo & Website Name -->
+            <div class="logo-section">
+                <img src="{% static 'images/logo.jpg' %}" alt="TradeSync Logo" class="logo">
+                <span class="TradeSync">TradeSync</span>
+            </div>
+
+            <!-- Profile Section -->
+            <div class="profile-section">
+                <img src="{% static 'images/profile.jpeg' %}" alt="Profile Picture" class="profile-pic">
+                <div class="profile-info">
+                    <span class="username">{{ user.username }}</span>
+                    <span class="email">{{ user.email }}</span>
+                </div>
+            </div>
+
+            <!-- Sidebar Navigation -->
+            <ul class="sidebar-nav">
+                <li><a href="{% url 'pdashboard' %}"><i class="fas fa-home"></i> <span class="sidebar-text">Home</span></a></li>
+                <li><a href="{% url 'portfolio' %}"><i class="fas fa-briefcase"></i> <span class="sidebar-text">Portfolio</span></a></li>
+                <li><a href="{% url 'buy_sell' %}"><i class="fas fa-exchange-alt"></i> <span class="sidebar-text">Trade</span></a></li>
+                <li><a href="{% url 'transactions_history' %}"><i class="fas fa-history"></i> <span class="sidebar-text">Transaction History</span></a></li>
+                <li><a href="#"><i class="fas fa-chart-line"></i> <span class="sidebar-text">Market</span></a></li>
+                <li><a href="{% url 'setting' %}"><i class="fas fa-cog"></i> <span class="sidebar-text">Settings</span></a></li>
+                <li><a href="{% url 'logout' %}" class="logout-btn"><i class="fas fa-sign-out-alt"></i> <span class="sidebar-text">Logout</span></a></li>
+            </ul>
+        </div>
+
+        <div id="main-content" class="main-content">
+            <div class="container">
+                <h1>Transaction History</h1>
+
+                <!-- Filter Form -->
+                <form method="GET" class="filter-form">
+                    <input type="text" name="stock_name" placeholder="Stock Name" value="{{ stock_name }}">
+                    <select name="transaction_type">
+                        <option value="">All Types</option>
+                        <option value="BUY" {% if transaction_type == "BUY" %}selected{% endif %}>Buy</option>
+                        <option value="SELL" {% if transaction_type == "SELL" %}selected{% endif %}>Sell</option>
+                    </select>
+                    <input type="date" name="start_date" value="{{ start_date }}">
+                    <input type="date" name="end_date" value="{{ end_date }}">
+                    <select name="sort_by">
+                        <option value="date" {% if sort_by == "date" %}selected{% endif %}>Sort by Date</option>
+                        <option value="price" {% if sort_by == "price" %}selected{% endif %}>Sort by Price</option>
+                        <option value="quantity" {% if sort_by == "quantity" %}selected{% endif %}>Sort by Quantity</option>
+                        <option value="type" {% if sort_by == "type" %}selected{% endif %}>Sort by Type</option>
+                    </select>
+                    <button type="submit">Filter</button>
+                </form>
+
+                <!-- Transactions Table -->
+                <table class="transaction-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Stock Name</th>
+                            <th>Type</th>
+                            <th>Price (₹)</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for transaction in page_obj %}
+                        <tr>
+                            <td>{{ transaction.date|date:"d M Y H:i" }}</td>
+                            <td>{{ transaction.stock_name }}</td>
+                            <td>{{ transaction.transaction_type }}</td>
+                            <td>₹{{ transaction.price }}</td>
+                            <td>{{ transaction.quantity }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5">No transactions found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const sidebar = document.getElementById("sidebar");
+            const mainContent = document.querySelector(".main-content");
+
+            sidebar.addEventListener("mouseenter", function () {
+                sidebar.classList.add("expanded");
+                mainContent.classList.add("collapsed");
+            });
+
+            sidebar.addEventListener("mouseleave", function () {
+                sidebar.classList.remove("expanded");
+                mainContent.classList.remove("collapsed");
+            });
+        });
+    </script>
+</body>
+</html>

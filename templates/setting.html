@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | TradeSync</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="{% static 'set.css' %}">
+</head>
+<body>
+    <div class="d-flex">
+        <div id="sidebar" class="sidebar">
+            <!-- Logo & Website Name -->
+            <div class="logo-section">
+                <img src="{% static 'images/logo.jpg' %}" alt="TradeSync Logo" class="logo">
+                <span class="TradeSync">TradeSync</span>
+            </div>
+
+            <!-- Profile Section -->
+            <div class="profile-section">
+                <img src="{% static 'images/profile.jpeg' %}" alt="Profile Picture" class="profile-pic">
+                <div class="profile-info">
+                    <span class="username">{{ user.username }}</span>
+                    <span class="email">{{ user.email }}</span>
+                </div>
+            </div>
+
+            <!-- Sidebar Navigation -->
+            <ul class="sidebar-nav">
+                <li><a href="{% url 'pdashboard' %}"><i class="fas fa-home"></i> <span class="sidebar-text">Home</span></a></li>
+                <li><a href="{% url 'portfolio' %}"><i class="fas fa-briefcase"></i> <span class="sidebar-text">Portfolio</span></a></li>
+                <li><a href="{% url 'buy_sell' %}"><i class="fas fa-exchange-alt"></i> <span class="sidebar-text">Trade</span></a></li>
+                <li><a href="{% url 'transactions_history' %}"><i class="fas fa-history"></i> <span class="sidebar-text">Transaction History</span></a></li>
+                <li><a href="#"><i class="fas fa-chart-line"></i> <span class="sidebar-text">Market</span></a></li>
+                <li><a href="{% url 'setting' %}"><i class="fas fa-cog"></i> <span class="sidebar-text">Settings</span></a></li>
+                <li><a href="{% url 'logout' %}" class="logout-btn"><i class="fas fa-sign-out-alt"></i> <span class="sidebar-text">Logout</span></a></li>
+            </ul>
+        </div>
+        
+        <div id="main-content" class="main-content">
+
+            <div class="settings-container">
+                <h1>Account Settings</h1>
+                <p>Manage your account settings below.</p>
+
+                <div class="account-section">
+                    <h3>Delete Account</h3>
+                    <p>Warning: This action will permanently remove your account and all associated data.</p>
+                    <form action="{% url 'delete_account' %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-btn">Delete Account</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const sidebar = document.getElementById("sidebar");
+            const mainContent = document.querySelector(".main-content");
+
+            sidebar.addEventListener("mouseenter", function () {
+                sidebar.classList.add("expanded");
+                mainContent.classList.add("collapsed");
+            });
+
+            sidebar.addEventListener("mouseleave", function () {
+                sidebar.classList.remove("expanded");
+                mainContent.classList.remove("collapsed");
+            });
+        });
+    </script>
+</body>
+</html>

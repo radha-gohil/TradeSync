@@ -1,0 +1,217 @@
+/* Global Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f4;
+}
+
+/* Logo Animation */
+.logo-container {
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    animation: fadeIn 1.5s ease-in-out forwards;
+}
+
+/* Logo Image */
+.logo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
+/* Fade-in Effect */
+@keyframes fadeIn {
+    0% { opacity: 0; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* Preloader Background */
+#preloader {
+    transition: opacity 1s ease-in-out;
+}
+
+/* Navbar */
+nav {
+    transition: all 0.3s ease-in-out;
+}
+nav a {
+    transition: color 0.3s ease-in-out;
+}
+nav a:hover {
+    color: #facc15; /* Yellow hover effect */
+}
+
+/* Hero Section */
+header {
+    background-size: cover;
+    background-position: center;
+}
+header h1 {
+    text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.8);
+    animation: glow-text 2s infinite alternate;
+}
+@keyframes glow-text {
+    0% { text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.8); }
+    100% { text-shadow: 0px 0px 20px rgba(255, 255, 255, 1); }
+}
+
+/* Transparent Login Box */
+.login-box {
+    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Buttons */
+.btn-yellow {
+    background-color: #facc15;
+    color: #222;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+}
+.btn-yellow:hover {
+    background-color: #ffcc00;
+    box-shadow: 0px 0px 10px rgba(255, 204, 0, 0.8);
+}
+
+/* Services Section */
+.service-card {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* About Section */
+#about {
+    background: #111; /* Dark background */
+    text-align: center;
+    padding: 100px 0;
+}
+
+.about-container {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+}
+
+/* About Image */
+.about-container img {
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.about-container img:hover {
+    transform: scale(1.05);
+}
+
+/* About Content */
+.about-values {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.value-box {
+    background: #222;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.value-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(255, 255, 255, 0.2);
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+    .login-box {
+        width: 90%;
+    }
+    .about-container {
+        flex-direction: column;
+        text-align: center;
+    }
+    .about-content {
+        text-align: center;
+    }
+}
+
+/* Flip Card Container */
+.flip-card {
+    perspective: 1000px;
+    width: 250px;
+    height: 250px;
+    margin: auto;
+}
+
+.flip-card-inner {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner,
+.flip-card:active .flip-card-inner {
+    transform: rotateY(180deg);
+}
+
+/* Front & Back Side */
+.flip-card-front, .flip-card-back {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Front Design */
+.flip-card-front {
+    background-color: white;
+    color: black;
+    padding: 20px;
+}
+
+/* Back Design */
+.flip-card-back {
+    background-color: #1e293b;
+    color: white;
+    transform: rotateY(180deg);
+    padding: 20px;
+    text-align: center;
+}
+
+/* Responsive Grid */
+@media (max-width: 768px) {
+    .flip-card {
+        width: 100%;
+        height: auto;
+    }
+}
