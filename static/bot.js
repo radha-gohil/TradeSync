@@ -5,8 +5,8 @@ let imageInput = document.querySelector("#image input");
 
 let sendButton = document.querySelector("#sendButton"); // Ensure button has id="sendButton"
 
-const API_KEY= "AIzaSyBT4OVarKrrzqaKlncxzhUw--W6tq-66oo"
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+const API_KEY= ""
+const API_URL = ``;
 
 let user = {
     message: null,
